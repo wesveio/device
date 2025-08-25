@@ -416,47 +416,63 @@
           ] = scrSig.split('x');
 
           // Update session information
-          document.getElementById('sid').textContent = sid;
-          document.getElementById('sfp').textContent = sfp;
+          document.getElementById('sid').textContent = String(sid || '');
+          document.getElementById('sfp').textContent = String(sfp || '');
 
           // Update location & language
-          document.getElementById('timezone').textContent =
-            timezone || 'Not available';
-          document.getElementById('language').textContent =
-            lang || 'Not available';
-          document.getElementById('languages').textContent =
-            langs || 'Not available';
+          document.getElementById('timezone').textContent = String(
+            timezone || 'Not available'
+          );
+          document.getElementById('language').textContent = String(
+            lang || 'Not available'
+          );
+          document.getElementById('languages').textContent = String(
+            langs || 'Not available'
+          );
 
           // Update browser & platform
-          document.getElementById('userAgent').textContent =
-            userAgent || 'Not available';
-          document.getElementById('platform').textContent =
-            platform || 'Not available';
-          document.getElementById('vendor').textContent =
-            vendor || 'Not available';
+          document.getElementById('userAgent').textContent = String(
+            userAgent || 'Not available'
+          );
+          document.getElementById('platform').textContent = String(
+            platform || 'Not available'
+          );
+          document.getElementById('vendor').textContent = String(
+            vendor || 'Not available'
+          );
 
           // Update device capabilities
-          document.getElementById('touchPoints').textContent = touch || '0';
-          document.getElementById('cpuCores').textContent =
-            hw || 'Not available';
-          document.getElementById('deviceMemory').textContent =
-            mem || 'Not available';
-          document.getElementById('doNotTrack').textContent = dnt || 'Not set';
+          document.getElementById('touchPoints').textContent = String(
+            touch || '0'
+          );
+          document.getElementById('cpuCores').textContent = String(
+            hw || 'Not available'
+          );
+          document.getElementById('deviceMemory').textContent = String(
+            mem || 'Not available'
+          );
+          document.getElementById('doNotTrack').textContent = String(
+            dnt || 'Not set'
+          );
 
           // Update display information
-          document.getElementById(
-            'screenResolution'
-          ).textContent = `${width} × ${height}`;
-          document.getElementById(
-            'availableScreen'
-          ).textContent = `${availWidth} × ${availHeight}`;
-          document.getElementById('colorDepth').textContent =
-            colorDepth || 'Not available';
-          document.getElementById('pixelDepth').textContent =
-            pixelDepth || 'Not available';
+          document.getElementById('screenResolution').textContent = `${String(
+            width || '0'
+          )} × ${String(height || '0')}`;
+          document.getElementById('availableScreen').textContent = `${String(
+            availWidth || '0'
+          )} × ${String(availHeight || '0')}`;
+          document.getElementById('colorDepth').textContent = String(
+            colorDepth || 'Not available'
+          );
+          document.getElementById('pixelDepth').textContent = String(
+            pixelDepth || 'Not available'
+          );
 
           // Update raw signals
-          document.getElementById('signals').textContent = signals;
+          document.getElementById('signals').textContent = String(
+            signals || ''
+          );
 
           // Hide loading and show content
           document.getElementById('loading').style.display = 'none';
