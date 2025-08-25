@@ -3,7 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Device Information Dashboard</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>GDI - Get Device Information | Real-time Device & Browser Analysis Tool</title>
+    <meta name="description" content="Free online tool to analyze your device information, browser capabilities, network performance, and system specifications in real-time. Get detailed insights about your device fingerprint, connectivity, and performance metrics." />
+    <meta name="keywords" content="device information, browser analysis, device fingerprint, network performance, system specs, device checker, browser capabilities, performance metrics, device detection" />
+    <meta name="author" content="GDI - Get Device Information" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://device-bckstg.netlify.app/" />
+    <meta property="og:title" content="GDI - Get Device Information | Real-time Device & Browser Analysis" />
+    <meta property="og:description" content="Free online tool to analyze your device information, browser capabilities, network performance, and system specifications in real-time." />
+    <meta property="og:image" content="https://device-bckstg.netlify.app/images/favicon/android-chrome-192x192.png" />
+    <meta property="og:site_name" content="GDI - Get Device Information" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://device-bckstg.netlify.app/" />
+    <meta property="twitter:title" content="GDI - Get Device Information | Real-time Device & Browser Analysis" />
+    <meta property="twitter:description" content="Free online tool to analyze your device information, browser capabilities, network performance, and system specifications in real-time." />
+    <meta property="twitter:image" content="https://device-bckstg.netlify.app/images/favicon/android-chrome-192x192.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="images/favicon/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="images/favicon/android-chrome-512x512.png" />
+    <link rel="manifest" href="images/favicon/site.webmanifest" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://device-bckstg.netlify.app/" />
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "GDI - Get Device Information",
+      "description": "Free online tool to analyze your device information, browser capabilities, network performance, and system specifications in real-time.",
+      "url": "https://device-bckstg.netlify.app/",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "GDI - Get Device Information"
+      },
+      "featureList": [
+        "Device Information Analysis",
+        "Browser Capabilities Detection",
+        "Network Performance Metrics",
+        "System Specifications",
+        "Real-time Performance Monitoring",
+        "Device Fingerprinting",
+        "Connectivity Analysis"
+      ],
+      "screenshot": "https://device-bckstg.netlify.app/screenshot.png",
+      "softwareVersion": "1.0.0",
+      "datePublished": "2024-01-01",
+      "dateModified": "2024-01-01"
+    }
+    </script>
+    
     <style>
       * {
         margin: 0;
@@ -238,26 +313,58 @@
           grid-template-columns: 1fr;
           gap: 20px;
         }
+
+        .session-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer nav ul {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+
+      /* Accessibility improvements */
+      @media (prefers-reduced-motion: reduce) {
+        .spinner {
+          animation: none;
+        }
+        
+        .info-card:hover {
+          transform: none;
+        }
+      }
+
+      /* Focus styles for accessibility */
+      .info-card:focus-within {
+        outline: 2px solid #4facfe;
+        outline-offset: 2px;
+      }
+
+      .footer nav a:focus {
+        outline: 2px solid #4facfe;
+        outline-offset: 2px;
+        border-radius: 4px;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
+    <article class="container">
+      <header class="header" role="banner">
         <h1>🔍 Device Information Dashboard</h1>
         <p>Comprehensive analysis of your device and browser characteristics</p>
-      </div>
+      </header>
 
-      <div class="content">
-        <div id="loading" class="loading">
-          <div class="spinner"></div>
+      <main class="content" role="main">
+        <section id="loading" class="loading" aria-label="Loading device information">
+          <div class="spinner" aria-hidden="true"></div>
           <p>Collecting device information...</p>
-        </div>
+        </section>
 
         <div id="content" style="display: none">
           <!-- Session Information -->
-          <div class="session-section">
-            <h2>🔐 Session Information</h2>
+          <section class="session-section" aria-labelledby="session-title">
+            <h2 id="session-title">🔐 Session Information</h2>
             <div class="session-grid">
               <div class="session-item">
                 <div class="session-label">Session ID (SID)</div>
@@ -271,17 +378,18 @@
           </div>
 
           <!-- Device Information -->
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="card-header">
+          <section id="device-info" class="info-grid" aria-label="Device information cards">
+            <article class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #e3f2fd; color: #1976d2"
+                  aria-hidden="true"
                 >
                   🌍
                 </div>
-                <div class="card-title">Location & Language</div>
-              </div>
+                <h3 class="card-title">Location & Language</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">Time Zone</div>
                 <div class="info-value" id="timezone"></div>
@@ -294,18 +402,19 @@
                 <div class="info-label">All Languages</div>
                 <div class="info-value" id="languages"></div>
               </div>
-            </div>
+            </article>
 
-            <div class="info-card">
-              <div class="card-header">
+            <article class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #f3e5f5; color: #7b1fa2"
+                  aria-hidden="true"
                 >
                   💻
                 </div>
-                <div class="card-title">Browser & Platform</div>
-              </div>
+                <h3 class="card-title">Browser & Platform</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">User Agent</div>
                 <div class="info-value" id="userAgent"></div>
@@ -318,18 +427,19 @@
                 <div class="info-label">Vendor</div>
                 <div class="info-value" id="vendor"></div>
               </div>
-            </div>
+            </article>
 
-            <div class="info-card">
-              <div class="card-header">
+            <article class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #e8f5e8; color: #388e3c"
+                  aria-hidden="true"
                 >
                   📱
                 </div>
-                <div class="card-title">Device Capabilities</div>
-              </div>
+                <h3 class="card-title">Device Capabilities</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">Touch Points</div>
                 <div class="info-value" id="touchPoints"></div>
@@ -346,18 +456,19 @@
                 <div class="info-label">Do Not Track</div>
                 <div class="info-value" id="doNotTrack"></div>
               </div>
-            </div>
+            </article>
 
-            <div class="info-card">
-              <div class="card-header">
+            <article class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #fff3e0; color: #f57c00"
+                  aria-hidden="true"
                 >
                   🖥️
                 </div>
-                <div class="card-title">Display Information</div>
-              </div>
+                <h3 class="card-title">Display Information</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">Screen Resolution</div>
                 <div class="info-value" id="screenResolution"></div>
@@ -374,18 +485,19 @@
                 <div class="info-label">Pixel Depth</div>
                 <div class="info-value" id="pixelDepth"></div>
               </div>
-            </div>
+            </article>
 
-            <div class="info-card">
-              <div class="card-header">
+            <article id="network-info" class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #e8f5e8; color: #388e3c"
+                  aria-hidden="true"
                 >
                   🌐
                 </div>
-                <div class="card-title">Network & Connectivity</div>
-              </div>
+                <h3 class="card-title">Network & Connectivity</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">Connection Status</div>
                 <div class="info-value" id="connectionStatus"></div>
@@ -410,18 +522,19 @@
                 <div class="info-label">Data Saver Mode</div>
                 <div class="info-value" id="saveData"></div>
               </div>
-            </div>
+            </article>
 
-            <div class="info-card">
-              <div class="card-header">
+            <article id="performance-info" class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #fff3e0; color: #f57c00"
+                  aria-hidden="true"
                 >
                   ⚡
                 </div>
-                <div class="card-title">Performance Metrics</div>
-              </div>
+                <h3 class="card-title">Performance Metrics</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">Page Load Time (ms)</div>
                 <div class="info-value" id="loadTime"></div>
@@ -446,18 +559,19 @@
                 <div class="info-label">Memory Usage (MB)</div>
                 <div class="info-value" id="memoryUsage"></div>
               </div>
-            </div>
+            </article>
 
-            <div class="info-card">
-              <div class="card-header">
+            <article class="info-card">
+              <header class="card-header">
                 <div
                   class="card-icon"
                   style="background: #fce4ec; color: #c2185b"
+                  aria-hidden="true"
                 >
                   🔧
                 </div>
-                <div class="card-title">Raw Signals</div>
-              </div>
+                <h3 class="card-title">Raw Signals</h3>
+              </header>
               <div class="info-item">
                 <div class="info-label">Complete Signal String</div>
                 <div
@@ -466,18 +580,23 @@
                   style="font-size: 0.8rem; line-height: 1.4"
                 ></div>
               </div>
-            </div>
-          </div>
+            </article>
+          </section>
         </div>
-      </div>
+      </main>
 
-      <div class="footer">
-        <p>
-          Device information collected in real-time • Built for Netlify
-          deployment
-        </p>
-      </div>
-    </div>
+      <footer class="footer" role="contentinfo">
+        <p>GDI - Get Device Information | Real-time Device Analysis Tool</p>
+        <nav aria-label="Footer navigation">
+          <ul style="list-style: none; padding: 0; margin: 10px 0 0 0; display: flex; justify-content: center; gap: 20px; font-size: 0.8rem;">
+            <li><a href="#session-title" style="color: #666; text-decoration: none;">Session Info</a></li>
+            <li><a href="#device-info" style="color: #666; text-decoration: none;">Device Info</a></li>
+            <li><a href="#network-info" style="color: #666; text-decoration: none;">Network</a></li>
+            <li><a href="#performance-info" style="color: #666; text-decoration: none;">Performance</a></li>
+          </ul>
+        </nav>
+      </footer>
+    </article>
 
     <script src="device.js"></script>
     <script>
