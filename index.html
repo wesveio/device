@@ -123,6 +123,31 @@
         border-left: 4px solid #4facfe;
       }
 
+      .status-online {
+        border-left-color: #4caf50 !important;
+        background: #e8f5e8 !important;
+      }
+
+      .status-offline {
+        border-left-color: #f44336 !important;
+        background: #ffebee !important;
+      }
+
+      .performance-good {
+        border-left-color: #4caf50 !important;
+        background: #e8f5e8 !important;
+      }
+
+      .performance-warning {
+        border-left-color: #ff9800 !important;
+        background: #fff3e0 !important;
+      }
+
+      .performance-poor {
+        border-left-color: #f44336 !important;
+        background: #ffebee !important;
+      }
+
       .session-section {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -355,6 +380,78 @@
               <div class="card-header">
                 <div
                   class="card-icon"
+                  style="background: #e8f5e8; color: #388e3c"
+                >
+                  🌐
+                </div>
+                <div class="card-title">Network & Connectivity</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Connection Status</div>
+                <div class="info-value" id="connectionStatus"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Connection Type</div>
+                <div class="info-value" id="connectionType"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Download Speed (Mbps)</div>
+                <div class="info-value" id="downlink"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Latency (ms)</div>
+                <div class="info-value" id="latency"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">RTT (ms)</div>
+                <div class="info-value" id="rtt"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Data Saver Mode</div>
+                <div class="info-value" id="saveData"></div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="card-header">
+                <div
+                  class="card-icon"
+                  style="background: #fff3e0; color: #f57c00"
+                >
+                  ⚡
+                </div>
+                <div class="card-title">Performance Metrics</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Page Load Time (ms)</div>
+                <div class="info-value" id="loadTime"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">DOM Ready (ms)</div>
+                <div class="info-value" id="domReady"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">First Paint (ms)</div>
+                <div class="info-value" id="firstPaint"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">First Contentful Paint (ms)</div>
+                <div class="info-value" id="firstContentfulPaint"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Current FPS</div>
+                <div class="info-value" id="currentFps"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Memory Usage (MB)</div>
+                <div class="info-value" id="memoryUsage"></div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="card-header">
+                <div
+                  class="card-icon"
                   style="background: #fce4ec; color: #c2185b"
                 >
                   🔧
@@ -384,10 +481,19 @@
 
     <script src="device.js"></script>
     <script>
+      let getCurrentFps = null;
+
       async function displayDeviceInfo() {
         try {
           // Get session fingerprint and signals
           const { sid, sfp, signals } = await getSessionFingerprint();
+
+          // Collect network and performance information
+          const networkInfo = await collectNetworkInfo();
+          const performanceInfo = collectPerformanceInfo();
+
+          // Start FPS measurement
+          getCurrentFps = startFPSMeasurement();
 
           // Parse signals
           const signalParts = signals.split('|');
@@ -469,6 +575,135 @@
             pixelDepth || 'Not available'
           );
 
+          // Update network information
+          const connectionStatusEl =
+            document.getElementById('connectionStatus');
+          connectionStatusEl.textContent = networkInfo.online
+            ? '🟢 Online'
+            : '🔴 Offline';
+          connectionStatusEl.className =
+            'info-value ' +
+            (networkInfo.online ? 'status-online' : 'status-offline');
+
+          document.getElementById('connectionType').textContent = String(
+            networkInfo.connectionType || 'Unknown'
+          );
+          document.getElementById('downlink').textContent = String(
+            networkInfo.downlink || 'Unknown'
+          );
+
+          const latencyEl = document.getElementById('latency');
+          latencyEl.textContent = String(networkInfo.latency || 'Unknown');
+          if (networkInfo.latency && networkInfo.latency !== 'N/A') {
+            latencyEl.className =
+              'info-value ' +
+              (networkInfo.latency < 100
+                ? 'performance-good'
+                : networkInfo.latency < 300
+                ? 'performance-warning'
+                : 'performance-poor');
+          }
+
+          const rttEl = document.getElementById('rtt');
+          rttEl.textContent = String(networkInfo.rtt || 'Unknown');
+          if (networkInfo.rtt && networkInfo.rtt > 0) {
+            rttEl.className =
+              'info-value ' +
+              (networkInfo.rtt < 50
+                ? 'performance-good'
+                : networkInfo.rtt < 150
+                ? 'performance-warning'
+                : 'performance-poor');
+          }
+
+          const saveDataEl = document.getElementById('saveData');
+          saveDataEl.textContent = networkInfo.saveData
+            ? '🟢 Enabled'
+            : '🔴 Disabled';
+          saveDataEl.className =
+            'info-value ' +
+            (networkInfo.saveData ? 'status-online' : 'status-offline');
+
+          // Update performance information
+          const loadTimeEl = document.getElementById('loadTime');
+          loadTimeEl.textContent = String(performanceInfo.loadTime);
+          if (
+            performanceInfo.loadTime !== 'Not available' &&
+            performanceInfo.loadTime > 0
+          ) {
+            loadTimeEl.className =
+              'info-value ' +
+              (performanceInfo.loadTime < 1000
+                ? 'performance-good'
+                : performanceInfo.loadTime < 3000
+                ? 'performance-warning'
+                : 'performance-poor');
+          }
+
+          const domReadyEl = document.getElementById('domReady');
+          domReadyEl.textContent = String(performanceInfo.domContentLoaded);
+          if (
+            performanceInfo.domContentLoaded !== 'Not available' &&
+            performanceInfo.domContentLoaded > 0
+          ) {
+            domReadyEl.className =
+              'info-value ' +
+              (performanceInfo.domContentLoaded < 500
+                ? 'performance-good'
+                : performanceInfo.domContentLoaded < 1500
+                ? 'performance-warning'
+                : 'performance-poor');
+          }
+
+          const firstPaintEl = document.getElementById('firstPaint');
+          firstPaintEl.textContent = String(performanceInfo.firstPaint);
+          if (
+            performanceInfo.firstPaint !== 'Not available' &&
+            performanceInfo.firstPaint > 0
+          ) {
+            firstPaintEl.className =
+              'info-value ' +
+              (performanceInfo.firstPaint < 500
+                ? 'performance-good'
+                : performanceInfo.firstPaint < 1500
+                ? 'performance-warning'
+                : 'performance-poor');
+          }
+
+          const firstContentfulPaintEl = document.getElementById(
+            'firstContentfulPaint'
+          );
+          firstContentfulPaintEl.textContent = String(
+            performanceInfo.firstContentfulPaint
+          );
+          if (
+            performanceInfo.firstContentfulPaint !== 'Not available' &&
+            performanceInfo.firstContentfulPaint > 0
+          ) {
+            firstContentfulPaintEl.className =
+              'info-value ' +
+              (performanceInfo.firstContentfulPaint < 800
+                ? 'performance-good'
+                : performanceInfo.firstContentfulPaint < 2000
+                ? 'performance-warning'
+                : 'performance-poor');
+          }
+
+          const currentFpsEl = document.getElementById('currentFps');
+          currentFpsEl.textContent = String(
+            performanceInfo.fps || 'Measuring...'
+          );
+
+          // Update memory usage
+          if (performanceInfo.memoryUsage) {
+            document.getElementById(
+              'memoryUsage'
+            ).textContent = `${performanceInfo.memoryUsage.used} / ${performanceInfo.memoryUsage.total} (Limit: ${performanceInfo.memoryUsage.limit})`;
+          } else {
+            document.getElementById('memoryUsage').textContent =
+              'Not available';
+          }
+
           // Update raw signals
           document.getElementById('signals').textContent = String(
             signals || ''
@@ -477,6 +712,24 @@
           // Hide loading and show content
           document.getElementById('loading').style.display = 'none';
           document.getElementById('content').style.display = 'block';
+
+          // Start updating FPS in real-time
+          setInterval(() => {
+            if (getCurrentFps) {
+              const fps = getCurrentFps();
+              if (fps > 0) {
+                const currentFpsEl = document.getElementById('currentFps');
+                currentFpsEl.textContent = String(fps);
+                currentFpsEl.className =
+                  'info-value ' +
+                  (fps >= 60
+                    ? 'performance-good'
+                    : fps >= 30
+                    ? 'performance-warning'
+                    : 'performance-poor');
+              }
+            }
+          }, 1000);
         } catch (error) {
           console.error('Error collecting device information:', error);
           document.getElementById('loading').innerHTML = `
